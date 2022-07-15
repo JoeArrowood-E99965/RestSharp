@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Globalization;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
+using System.Text;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
-namespace RestSharp.Extensions; 
+namespace RestSharp.Extensions;
 
 static class StringExtensions {
     static readonly Regex IsUpperCaseRegex = new(@"^[A-Z]+$");
@@ -39,22 +39,23 @@ static class StringExtensions {
     /// Uses Uri.EscapeDataString() based on recommendations on MSDN
     /// http://blogs.msdn.com/b/yangxind/archive/2006/11/09/don-t-use-net-system-uri-unescapedatastring-in-url-decoding.aspx
     /// </summary>
+
     public static string UrlEncode(this string input) {
         const int maxLength = 32766;
 
-        if (input == null)
+        if(input == null)
             throw new ArgumentNullException(nameof(input));
 
-        if (input.Length <= maxLength)
+        if(input.Length <= maxLength)
             return Uri.EscapeDataString(input);
 
-        var sb    = new StringBuilder(input.Length * 2);
+        var sb = new StringBuilder(input.Length * 2);
         var index = 0;
 
-        while (index < input.Length) {
+        while(index < input.Length) {
             var length = Math.Min(input.Length - index, maxLength);
 
-            while (CharUnicodeInfo.GetUnicodeCategory(input[index + length - 1]) == UnicodeCategory.Surrogate) {
+            while(CharUnicodeInfo.GetUnicodeCategory(input[index + length - 1]) == UnicodeCategory.Surrogate) {
                 length--;
             }
 
@@ -96,13 +97,13 @@ static class StringExtensions {
     /// <param name="culture"></param>
     /// <returns></returns>
     public static string ToPascalCase(this string text, bool removeUnderscores, CultureInfo culture) {
-        if (string.IsNullOrEmpty(text))
+        if(string.IsNullOrEmpty(text))
             return text;
 
         text = text.Replace('_', ' ');
 
         var joinString = removeUnderscores ? string.Empty : "_";
-        var words      = text.Split(' ');
+        var words = text.Split(' ');
 
         return words
             .Where(x => x.Length > 0)
@@ -111,9 +112,9 @@ static class StringExtensions {
 
         string CaseWord(string word) {
             var restOfWord = word.Substring(1);
-            var firstChar  = char.ToUpper(word[0], culture);
+            var firstChar = char.ToUpper(word[0], culture);
 
-            if (restOfWord.IsUpperCase())
+            if(restOfWord.IsUpperCase())
                 restOfWord = restOfWord.ToLower(culture);
 
             return string.Concat(firstChar, restOfWord);
@@ -174,7 +175,7 @@ static class StringExtensions {
     /// <param name="culture">The culture to use for conversion</param>
     /// <returns>IEnumerable&lt;string&gt;</returns>
     public static IEnumerable<string> GetNameVariants(this string name, CultureInfo culture) {
-        if (string.IsNullOrEmpty(name))
+        if(string.IsNullOrEmpty(name))
             yield break;
 
         yield return name;
